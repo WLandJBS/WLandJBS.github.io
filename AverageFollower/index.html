@@ -1,1 +1,69 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test</title>
+  <style>
+    *{
+  font-family: Arial;
+  padding: 0px;
+  margin: 0px;
+}
+h1{
+  background-color: pink;
+  padding: 5px;
+  box-shadow: 5px 5px 5px grey;
+}
+main{
+  padding: 10px;
+  text-shadow: 5px 5px 2px grey;
+}
+input{
+  border-radius: 10px;
+  border: blue solid;
+  padding: 3px;
+  font-family: Calibri;
+  box-shadow: 5px 5px 5px grey;;
+}
+button{
+  background-color: lightgrey;
+  border: grey solid;
+  padding: 5px;
+  box-shadow: 5px 5px 5px grey;
+}
+  </style>
+</head>
+<body>
+  <h1>Step 1</h1>
+  <main>
+    Type your Scratch username here: 
+    <input placeholder="Scratch Username"/><br/>
+    <button onclick="stepTwo(this);">
+      Move on to Step 2
+    </button>
+  </main>
+  <script>
+    var stepTwo = function(button){
+  button.innerHTML = "Please wait...";
+  
+  var user = document.querySelectorAll("input")[0].value;
+  var inet = new XMLHttpRequest();
+  inet.open("GET", "https://api.scratch.mit.edu/users/"+user);
+  inet.onreadystatechange = function(){
+    if(inet.readyState == 4){
+      if(inet.status == 200){
+        var data = JSON.parse(inet.responseText);
+        var startDate = new Date(data.history.joined).valueOf();
+        var lastDate = new Date().valueOf();
+        button.innerHTML = "You have been on Scratch for " + (lastDate - startDate) + " miliseconds";
+        document.querySelectorAll("h1")[0].innerHTML = "Step 2 (No more steps yet)"
+      } else {
+        button.innerHTML = "An error occured :(<br/>Try again?";
+      }
+    }
+  }
+  inet.send();
+}
+  </script>
+</body>
+</html>
